@@ -14,15 +14,29 @@ function App() {
   const [eur, setEur] = useState(null);
 
   // Quote states
-  const [quote, setQuote] = useState("Click the button to get a motivational quote!");
+  const [quote, setQuote] = useState(
+    "Click the button to get a motivational quote!"
+  );
   const [loadingQuote, setLoadingQuote] = useState(false);
 
-  // 🌤️ Mock weather
+  // 🌤️ Dynamic Weather (mock)
   const getWeather = async () => {
     if (!city) return alert("Please enter a city name!");
     setLoadingWeather(true);
     try {
-      const data = { temperature: 25, windspeed: 10, condition: "Sunny" };
+      const randomTemp = Math.floor(Math.random() * 15) + 20; // 20-34°C
+      const randomWind = Math.floor(Math.random() * 20) + 5; // 5-24 km/h
+      const conditions = ["Sunny", "Cloudy", "Rainy", "Windy", "Stormy"];
+      const randomCondition =
+        conditions[Math.floor(Math.random() * conditions.length)];
+
+      const data = {
+        city,
+        temperature: randomTemp,
+        windspeed: randomWind,
+        condition: randomCondition,
+      };
+
       setWeather(data);
     } catch (err) {
       alert("Error fetching weather data!");
@@ -31,14 +45,15 @@ function App() {
     }
   };
 
-  // 💱 Mock currency conversion
+  // 💱 Currency Converter (mock)
   const convertCurrency = () => {
-    if (!inr) return alert("Please enter an amount in INR!");
-    setUsd((inr * 0.012).toFixed(2));
-    setEur((inr * 0.011).toFixed(2));
+    if (!inr) return alert("Enter amount in INR!");
+    const amount = parseFloat(inr);
+    setUsd((amount * 0.012).toFixed(2));
+    setEur((amount * 0.011).toFixed(2));
   };
 
-  // 💬 Mock motivational quote
+  // 💬 Motivational Quote (mock)
   const getQuote = async () => {
     setLoadingQuote(true);
     try {
@@ -51,7 +66,7 @@ function App() {
       const randomIndex = Math.floor(Math.random() * quotes.length);
       setQuote(quotes[randomIndex]);
     } catch (err) {
-      setQuote("Failed to fetch quote. Try again!");
+      setQuote("Failed to fetch quote!");
     } finally {
       setLoadingQuote(false);
     }
@@ -85,6 +100,7 @@ function App() {
       </div>
 
       <div style={styles.box}>
+        {/* Weather Module */}
         {activeTab === "weather" && (
           <div>
             <h2>🌤️ Weather Information</h2>
@@ -99,104 +115,4 @@ function App() {
               {loadingWeather ? "Loading..." : "Get Weather"}
             </button>
             {weather && (
-              <div style={styles.result}>
-                <p>🌡️ Temperature: {weather.temperature}°C</p>
-                <p>💨 Wind Speed: {weather.windspeed} km/h</p>
-                <p>Condition: {weather.condition}</p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === "currency" && (
-          <div>
-            <h2>💱 Currency Converter</h2>
-            <input
-              type="number"
-              placeholder="Enter amount in INR"
-              value={inr}
-              onChange={(e) => setInr(e.target.value)}
-              style={styles.input}
-            />
-            <button onClick={convertCurrency} style={styles.btn}>
-              Convert
-            </button>
-            {usd && eur && (
-              <div style={styles.result}>
-                <p>🇺🇸 USD: ${usd}</p>
-                <p>🇪🇺 EUR: €{eur}</p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === "quote" && (
-          <div>
-            <h2>💬 Motivational Quote</h2>
-            <p style={{ fontStyle: "italic", marginBottom: "1rem" }}>{quote}</p>
-            <button onClick={getQuote} style={styles.btn}>
-              {loadingQuote ? "Loading..." : "Get Quote"}
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// Inline styles
-const styles = {
-  container: {
-    textAlign: "center",
-    fontFamily: "Arial, sans-serif",
-    padding: "2rem",
-    backgroundColor: "#f5f9ff",
-    minHeight: "100vh",
-  },
-  nav: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "1rem",
-    margin: "1.5rem 0",
-  },
-  btn: {
-    padding: "0.6rem 1.2rem",
-    border: "none",
-    borderRadius: "6px",
-    backgroundColor: "#0077ff",
-    color: "white",
-    cursor: "pointer",
-    transition: "0.2s",
-  },
-  activeBtn: {
-    padding: "0.6rem 1.2rem",
-    border: "2px solid #0077ff",
-    borderRadius: "6px",
-    backgroundColor: "white",
-    color: "#0077ff",
-    fontWeight: "bold",
-    cursor: "pointer",
-  },
-  input: {
-    padding: "0.5rem",
-    width: "200px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-    marginRight: "0.5rem",
-  },
-  box: {
-    border: "1px solid #ccc",
-    borderRadius: "10px",
-    padding: "1.5rem",
-    maxWidth: "400px",
-    margin: "0 auto",
-    backgroundColor: "white",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-  },
-  result: {
-    marginTop: "1rem",
-    fontWeight: "bold",
-  },
-};
-
-export default App;
+              <div style=
